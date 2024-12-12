@@ -7,14 +7,13 @@ import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
+/// The Widget that configures your application.
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required this.settingsController,
   });
 
-  final SettingsController settingsController;
-
+//TODO: use settings bloc
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(

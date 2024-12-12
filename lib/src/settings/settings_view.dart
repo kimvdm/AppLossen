@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'settings_controller.dart';
+import '../features/theme/presentation/bloc/bloc.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatelessWidget {
-  const SettingsView({super.key, required this.controller});
+  const SettingsView({super.key, required this.bloc});
 
   static const routeName = '/settings';
 
-  final SettingsController controller;
+  final ThemeBloc bloc;
+
+  //TODO: use bloc builder
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,8 @@ class SettingsView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: DropdownButton<ThemeMode>(
-          value: controller.themeMode,
-          onChanged: controller.updateThemeMode,
+          value: bloc.eventSink,
+          onChanged: bloc.updateThemeMode,
           items: const [
             DropdownMenuItem(
               value: ThemeMode.system,
