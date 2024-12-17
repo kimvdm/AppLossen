@@ -1,19 +1,13 @@
+import 'package:applossen/src/features/theme/presentation/bloc/bloc.dart';
+import 'package:applossen/src/features/theme/presentation/bloc/event.dart';
+import 'package:applossen/src/features/theme/presentation/bloc/state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../features/theme/presentation/bloc/bloc.dart';
-
-/// Displays the various settings that can be customized by the user.
-///
-/// When a user changes a setting, the SettingsController is updated and
-/// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatelessWidget {
-  const SettingsView({super.key, required this.bloc});
+  const SettingsView({super.key});
 
   static const routeName = '/settings';
-
-  final ThemeBloc bloc;
-
-  //TODO: use bloc builder
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +17,37 @@ class SettingsView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: DropdownButton<ThemeMode>(
-          value: bloc.eventSink,
-          onChanged: bloc.updateThemeMode,
-          items: const [
-            DropdownMenuItem(
-              value: ThemeMode.system,
-              child: Text('System Theme'),
-            ),
-            DropdownMenuItem(
-              value: ThemeMode.light,
-              child: Text('Light Theme'),
-            ),
-            DropdownMenuItem(
-              value: ThemeMode.dark,
-              child: Text('Dark Theme'),
-            )
-          ],
+        child: BlocBuilder<ThemeBloc, ThemeState>(
+          builder: (context, state) {
+            if (state is ThemeLoaded) {
+              return DropdownButton<ThemeMode>(
+                value: state.themeMode,
+                onChanged: (ThemeMode? newMode) {
+                  if (newMode != null) {
+                    context
+                        .read<ThemeBloc>()
+                        .add(UpdateThemeModeEvent(newMode));
+                  }
+                },
+                items: const [
+                  DropdownMenuItem(
+                    value: ThemeMode.system,
+                    child: Text('System Theme'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.light,
+                    child: Text('Light Theme'),
+                  ),
+                  DropdownMenuItem(
+                    value: ThemeMode.dark,
+                    child: Text('Dark Theme'),
+                  ),
+                ],
+              );
+            } else {
+              return const Center(child: Text('Failed to load settings'));
+            }
+          },
         ),
       ),
     );

@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import 'package:applossen/src/features/theme/data/data_sources/data_source_impl.dart';
-import 'package:applossen/src/features/theme/data/repositories/repository_impl.dart';
-import 'package:applossen/src/features/theme/domain/repositories/theme_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +8,7 @@ import 'event.dart';
 import 'state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
-  //TODO: Move to factory for DI?
-  final useCase = ThemeUsecase(ThemeRepositoryImpl(ThemeDataSourceImpl()));
+  final ThemeUsecase useCase;
 
   final _stateController = StreamController<ThemeState>.broadcast();
   final _eventController = StreamController<ThemeEvent>();
@@ -21,7 +17,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   ThemeMode _currentThemeMode = ThemeMode.system;
 
-  ThemeBloc() : super(ThemeInitial()) {
+  ThemeBloc(this.useCase) : super(ThemeInitial()) {
     add(LoadThemeEvent());
   }
 
