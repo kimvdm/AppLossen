@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,44 +7,31 @@ import 'state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   final ThemeUsecase useCase;
-
-  final _stateController = StreamController<ThemeState>.broadcast();
-  final _eventController = StreamController<ThemeEvent>();
-
-  Sink<ThemeEvent> get eventSink => _eventController.sink;
-
-  ThemeMode _currentThemeMode = ThemeMode.system;
+  late ThemeMode _currentThemeMode;
 
   ThemeBloc(this.useCase) : super(ThemeInitial()) {
+    // Register event handlers
+    on<LoadThemeEvent>(_onLoadThemeEvent);
+    on<UpdateThemeModeEvent>(_onUpdateThemeModeEvent);
+
+    // Trigger the initial load
     add(LoadThemeEvent());
   }
 
-  Stream<ThemeState> mapEventToState(ThemeEvent event) async* {
-    switch (event.runtimeType) {
-      case LoadThemeEvent _:
-        yield* loadSettings();
-        break;
-      case UpdateThemeModeEvent _:
-        yield* updateThemeMode((event as UpdateThemeModeEvent).newThemeMode);
-        break;
+  Future<void> _onLoadThemeEvent(
+      LoadThemeEvent event, Emitter<ThemeState> emit) async {
+    await useCase
+        .getThemeMode()
+        .then((themeMode) => {_currentThemeMode = themeMode});
+    emit(ThemeLoaded(_currentThemeMode));
+  }
+
+  Future<void> _onUpdateThemeModeEvent(
+      UpdateThemeModeEvent event, Emitter<ThemeState> emit) async {
+    if (event.newThemeMode != _currentThemeMode) {
+      _currentThemeMode = event.newThemeMode;
+      await useCase.updateThemeMode(event.newThemeMode);
+      emit(ThemeLoaded(_currentThemeMode));
     }
-  }
-
-  Stream<ThemeState> loadSettings() async* {
-    _currentThemeMode = useCase.getThemeMode();
-    yield ThemeLoaded(_currentThemeMode);
-  }
-
-  Stream<ThemeState> updateThemeMode(ThemeMode newThemeMode) async* {
-    if (newThemeMode != _currentThemeMode) {
-      _currentThemeMode = newThemeMode;
-      await useCase.updateThemeMode(newThemeMode);
-      yield ThemeLoaded(_currentThemeMode);
-    }
-  }
-
-  void dispose() {
-    _stateController.close();
-    _eventController.close();
   }
 }

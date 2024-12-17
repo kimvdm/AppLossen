@@ -45,7 +45,7 @@ class SettingsView extends StatelessWidget {
                 ],
               );
             } else {
-              return const Center(child: Text('Failed to load settings'));
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),

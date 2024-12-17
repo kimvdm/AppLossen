@@ -6,9 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/utils/injections.dart';
 import 'features/theme/presentation/bloc/bloc.dart';
 import 'features/theme/presentation/bloc/state.dart';
-import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
-import 'settings/settings_view.dart';
+import 'features/theme/presentation/widgets/settings_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -44,12 +42,9 @@ class MyApp extends StatelessWidget {
                   builder: (BuildContext context) {
                     switch (routeSettings.name) {
                       case SettingsView.routeName:
-                        return const SettingsView(); // Modify SettingsView to no longer need settingsController
-                      case SampleItemDetailsView.routeName:
-                        return const SampleItemDetailsView();
-                      case SampleItemListView.routeName:
+                        return const SettingsView();
                       default:
-                        return const SampleItemListView();
+                        return const SettingsView();
                     }
                   },
                 );
