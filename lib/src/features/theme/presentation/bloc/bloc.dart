@@ -10,11 +10,9 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   late ThemeMode _currentThemeMode;
 
   ThemeBloc(this.useCase) : super(ThemeInitial()) {
-    // Register event handlers
     on<LoadThemeEvent>(_onLoadThemeEvent);
     on<UpdateThemeModeEvent>(_onUpdateThemeModeEvent);
 
-    // Trigger the initial load
     add(LoadThemeEvent());
   }
 

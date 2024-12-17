@@ -6,7 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/utils/injections.dart';
 import 'features/theme/presentation/bloc/bloc.dart';
 import 'features/theme/presentation/bloc/state.dart';
-import 'features/theme/presentation/widgets/settings_view.dart';
+import 'features/theme/presentation/pages/settings_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
       child: initializeBlocs(
         child: BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, themeState) {
-            // Determine the theme and theme mode from the ThemeBloc's state
             final ThemeMode themeMode = (themeState is ThemeLoaded)
                 ? themeState.themeMode
                 : ThemeMode.system;
