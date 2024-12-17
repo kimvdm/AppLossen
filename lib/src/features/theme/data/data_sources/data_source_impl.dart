@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ThemeDataSource {
-  ThemeMode themeMode();
+  Future<ThemeMode> themeMode();
   updateThemeMode(ThemeMode theme);
 }
 
+//TODO: Check if sharePref can be a late init variable without causing crash
 class ThemeDataSourceImpl implements ThemeDataSource {
-  late final SharedPreferences _sharedPrefs;
-
-  Future<void> init() async {
-    _sharedPrefs = await SharedPreferences.getInstance();
-  }
-
   @override
-  ThemeMode themeMode() {
-    int themeIndex = _sharedPrefs.getInt(SharedPreferencesKeys.themeMode) ??
+  Future<ThemeMode> themeMode() async {
+    var sharedPrefs = await SharedPreferences.getInstance();
+    int themeIndex = sharedPrefs.getInt(SharedPreferencesKeys.themeMode) ??
         ThemeMode.system.index;
     return ThemeMode.values[themeIndex];
   }
 
   @override
-  updateThemeMode(ThemeMode theme) {
-    return _sharedPrefs.setInt(SharedPreferencesKeys.themeMode, theme.index);
+  updateThemeMode(ThemeMode theme) async {
+    var sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.setInt(SharedPreferencesKeys.themeMode, theme.index);
   }
 }

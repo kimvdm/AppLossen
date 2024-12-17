@@ -9,7 +9,7 @@ class ThemeRepositoryImpl implements ThemeRepository {
   ThemeRepositoryImpl(this._dataSource);
 
   @override
-  ThemeMode themeMode() {
+  Future<ThemeMode> themeMode() {
     return _dataSource.themeMode();
   }
 

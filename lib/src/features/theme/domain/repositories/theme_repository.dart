@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
 abstract class ThemeRepository {
-  ThemeMode themeMode();
+  Future<ThemeMode> themeMode();
   updateThemeMode(ThemeMode theme);
 }
